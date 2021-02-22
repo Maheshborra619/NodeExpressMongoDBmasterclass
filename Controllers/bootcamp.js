@@ -2,6 +2,7 @@ exports.getBootCamp = (req,res,next)=>{
     res.status(200).json({
         success: true,
         message: "success getting all the bootcamps list",
+        logger:req.header
       });
 }
 
