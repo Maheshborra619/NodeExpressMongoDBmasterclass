@@ -6,6 +6,7 @@ exports.getBootCamp = async  (req,res,next)=>{
     const getbootlist = await BootCamp.find();
     res.status(200).json({
       success: true,
+      count : getbootlist.length,
       data: getbootlist,
       logger:req.header
     });
@@ -60,8 +61,8 @@ exports.updateBootCampById = async (req,res,next)=>{
     }
     res.status(200).json({
       success: true,
+      message:  `updating   bootcamp of id - ${req.params.id}`,
       data: updatebootlistbyid,
-      logger:req.header
     });
   }catch(err){
     res.status(400).send({error:err.message});
@@ -69,10 +70,20 @@ exports.updateBootCampById = async (req,res,next)=>{
  
 }
 
-exports.deleteBootCampById = (req,res,next)=>{
+exports.deleteBootCampById = async  (req,res,next)=>{
+  try{
+    const deletebootlistbyid = await BootCamp.findByIdAndDelete(req.params.id);
+    if(!deletebootlistbyid){
+      return res.status(400).send({status:"false"})
+    }
     res.status(200).json({
-        success: true,
-        message:  `updating   bootcamp of id - ${req.params.id}`,
-      });
+      success: true,
+      message:  `deleting   bootcamp of id - ${req.params.id}`,
+      data: "id deleted ",
+      logger:req.header
+    });
+  }catch(err){
+    res.status(400).send({error:err.message});
+    }
 }
 
