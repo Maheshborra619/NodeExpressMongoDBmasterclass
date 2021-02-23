@@ -1,30 +1,72 @@
-exports.getBootCamp = (req,res,next)=>{
+const BootCamp = require('../Models/BootCamp');
+
+
+exports.getBootCamp = async  (req,res,next)=>{
+  try{
+    const getbootlist = await BootCamp.find();
     res.status(200).json({
-        success: true,
-        message: "success getting all the bootcamps list",
-        logger:req.header
-      });
+      success: true,
+      data: getbootlist,
+      logger:req.header
+    });
+  }catch(err){
+    res.status(400).send({error:err.message});
+    }
+    
 }
 
-exports.getBootCampById = (req,res,next)=>{
+exports.getBootCampById = async (req,res,next)=>{
+  
+  try{
+    const getbootlistbyid = await BootCamp.findById(req.params.id);
+    if(!getbootlistbyid){
+      return res.status(400).send({status:"false"})
+    }
     res.status(200).json({
-        success: true,
-        message:  `getting   bootcamp of id - ${req.params.id}`,
-      });
+      success: true,
+      data: getbootlistbyid,
+      logger:req.header
+    });
+  }catch(err){
+    res.status(400).send({error:err.message});
+    }
 }
 
-exports.createBootCamp = (req,res,next)=>{
-    res.status(200).json({
-        success: true,
-        message: "success creating  bootcamp",
-      });
+
+//create BootCamp
+exports.createBootCamp = async (req,res,next)=>{
+try{
+  const createBoot = await BootCamp.create(req.body);
+  res.status(201).json({
+    sucess:"true",
+    data:createBoot
+  });
+}catch(err){
+  console.log("error occures");
+  res.status(400).json({
+    "sucess":"false",
+    error: err.message})
+}
 }
 
-exports.updateBootCampById = (req,res,next)=>{
+exports.updateBootCampById = async (req,res,next)=>{
+  try{
+    const updatebootlistbyid = await BootCamp.findByIdAndUpdate(req.params.id,req.body,{
+      new :true,
+      runValidators:true
+    });
+    if(!updatebootlistbyid){
+      return res.status(400).send({status:"false"})
+    }
     res.status(200).json({
-        success: true,
-        message:  `updating   bootcamp of id - ${req.params.id}`,
-      });
+      success: true,
+      data: updatebootlistbyid,
+      logger:req.header
+    });
+  }catch(err){
+    res.status(400).send({error:err.message});
+    }
+ 
 }
 
 exports.deleteBootCampById = (req,res,next)=>{
